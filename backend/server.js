@@ -9,13 +9,15 @@
 
 //importe le package http qui permet de créer le serveur
 const http = require("http"); //importe le package http
+const app = require("./app"); //apporte le app.js
+
+//On dit sur quel port on doit tourner
+app.set("port", process.env.PORT || 3000);
 
 //Appelle la methode createServer du package http
 // et appelle la ft qui reçoit 2 arguments
 // la requete et la réponse qu'on note req et res
-const server = http.createServer((req, res) => {
-  res.end("Voici la réponse du server");
-});
+const server = http.createServer(app);
 
 //Attente requetes sur port 3000
 // ou sur variable d'env process.env.PORT
