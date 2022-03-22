@@ -53,6 +53,22 @@ app.use((req, res, next) => {
   next();
 });
 
+//Utilisatin de EXPRESS:
+//Ajout use express.json pour capturer les objets json
+
+//Express prend toutes les requêtes qui ont comme Content -
+//Type  application / json  et met à disposition leur  body  directement
+//sur l'objet req, ce qui nous permet d'écrire le middleware POST suivant:
+app.use(express.json());
+
+// Middleware POST:
+app.post("/api/stuff", (req, res, next) => {
+  console.log(req.body);
+  res.status(201).json({
+    message: "Objet créé !",
+  });
+});
+
 app.use("/api/stuff", (req, res, next) => {
   const stuff = [
     {
