@@ -8,17 +8,68 @@
 //------------------------------------------------------
 
 //importe le package http qui permet de créer le serveur
-const http = require("http"); //importe le package http
-const app = require("./app"); //apporte le app.js
+//const http = require("http"); //importe le package http
+//const app = require("./app"); //apporte le app.js
 
 //On dit sur quel port on doit tourner
-app.set("port", process.env.PORT || 3000);
+//app.set("port", process.env.PORT || 3000);
 
 //Appelle la methode createServer du package http
 // et appelle la ft qui reçoit 2 arguments
 // la requete et la réponse qu'on note req et res
-const server = http.createServer(app);
+//const server = http.createServer(app);
 
 //Attente requetes sur port 3000
 // ou sur variable d'env process.env.PORT
-server.listen(process.env.PORT || 3000); //ecoute port 3000 ou env si 3000 pas dispo
+//server.listen(process.env.PORT || 3000); //ecoute port 3000 ou env si 3000 pas dispo
+//--------------------------------------------------------
+//22 mars 2022: modifs suite à l'installation de express:
+
+const http = require("http");
+const app = require("./app");
+
+const normalizePort = (val) => {
+  const port = parseInt(val, 10);
+
+  if (isNaN(port)) {
+    return val;
+  }
+  if (port >= 0) {
+    return port;
+  }
+  return false;
+};
+const port = normalizePort(process.env.PORT || "3000");
+app.set("port", port);
+
+const errorHandler = (error) => {
+  if (error.syscall !== "listen") {
+    throw error;
+  }
+  const address = server.address();
+  const bind =
+    typeof address === "string" ? "pipe " + address : "port: " + port;
+  switch (error.code) {
+    case "EACCES":
+      console.error(bind + " requires elevated privileges.");
+      process.exit(1);
+      break;
+    case "EADDRINUSE":
+      console.error(bind + " is already in use.");
+      process.exit(1);
+      break;
+    default:
+      throw error;
+  }
+};
+
+const server = http.createServer(app);
+
+server.on("error", errorHandler);
+server.on("listening", () => {
+  const address = server.address();
+  const bind = typeof address === "string" ? "pipe " + address : "port " + port;
+  console.log("Listening on " + bind);
+});
+
+server.listen(port);
