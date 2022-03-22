@@ -39,6 +39,20 @@ app.use((req, res) => {
 
 //Nouvelle version du middleware du 22 mars 2022
 
+// ajout du middleware général
+app.use((req, res, next) => {
+  res.setHeader("Access-Control-Allow-Origin", "*");
+  res.setHeader(
+    "Access-Control-Allow-Headers",
+    "Origin, X-Requested-With, Content, Accept, Content-Type, Authorization"
+  );
+  res.setHeader(
+    "Access-Control-Allow-Methods",
+    "GET, POST, PUT, DELETE, PATCH, OPTIONS"
+  );
+  next();
+});
+
 app.use("/api/stuff", (req, res, next) => {
   const stuff = [
     {
