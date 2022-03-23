@@ -7,8 +7,20 @@
 // import de express
 const express = require("Express");
 
+//mongoose
+const mongoose = require("mongoose");
+
 // application
 const app = express();
+
+//connexion a mongoDB
+mongoose
+  .connect(
+    "mongodb+srv://jimbob:<BTCUser1Passwd>@cluster0-pme76.mongodb.net/test?retryWrites=true&w=majority",
+    { useNewUrlParser: true, useUnifiedTopology: true }
+  )
+  .then(() => console.log("Connexion à MongoDB réussie !"))
+  .catch(() => console.log("Connexion à MongoDB échouée !"));
 
 /* premiers middleware abandonnés pour la nouvelle version du 22 mars 2022
 // Premier middleware
