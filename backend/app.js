@@ -29,16 +29,34 @@ client.connect(err => {
   client.close();
 });
 
+"mongodb+srv://BTCUser1:BTCUser1Passwd@cluster0-wupp6.mongodb.net/test?retryWrites=true&w=majority",
+remplacé par
+ cluster0-shard-00-01.wupp6.mongodb.net:27017 
+ "mongodb+srv://BTCUser1:BTCUser1Passwd@cluster0-shard-00-01.wupp6.mongodb.net:27017/test?retryWrites=true&w=majority",
 --------------------------------------------------------------------
 */
 
+const { MongoClient, ServerApiVersion } = require("mongodb");
+const uri =
+  "mongodb+srv://BTCUser1:BTCUser1Passwd@cluster0.wupp6.mongodb.net/myFirstDatabase?retryWrites=true&w=majority";
+const client = new MongoClient(uri, {
+  useNewUrlParser: true,
+  useUnifiedTopology: true,
+  serverApi: ServerApiVersion.v1,
+});
+client.connect((err) => {
+  const collection = client.db("test").collection("devices");
+  // perform actions on the collection object
+  client.close();
+});
+
 mongoose
-  .connect(
-    "mongodb+srv://BTCUser1:BTCUser1Passwd@cluster0-wupp6.mongodb.net/test?retryWrites=true&w=majority",
-    { useNewUrlParser: true, useUnifiedTopology: true }
-  )
+  .connect(uri, { useNewUrlParser: true, useUnifiedTopology: true })
   .then(() => console.log("Connexion à MongoDB réussie !"))
-  .catch(() => console.log("Connexion à MongoDB échouée !"));
+
+  .catch((error) => {
+    console.error("error= " + error + "  Connexion à MongoDB échouée !");
+  });
 
 /* premiers middleware abandonnés pour la nouvelle version du 22 mars 2022
 // Premier middleware
@@ -83,7 +101,7 @@ app.use((req, res, next) => {
   next();
 });
 
-//Utilisatin de EXPRESS:
+//Utilisation de EXPRESS:
 //Ajout use express.json pour capturer les objets json
 
 //Express prend toutes les requêtes qui ont comme Content -
