@@ -159,6 +159,13 @@ app.get("/api/stuff", (req, res, next) => {
     .catch((error) => res.status(400).json({ error }));
 });
 
+//DELETE
+app.delete("/api/stuff/:id", (req, res, next) => {
+  Thing.deleteOne({ _id: req.params.id })
+    .then(() => res.status(200).json({ message: "Objet supprimé !" }))
+    .catch((error) => res.status(400).json({ error }));
+});
+
 //export de la fonction pour qu'on puisse y acceder depuis les autres fichiers du projet
 // dont le server node.
 module.exports = app;
