@@ -13,6 +13,9 @@ const mongoose = require("mongoose");
 // application
 const app = express();
 
+//Ajout liens à things
+const Thing = require("./models/thing");
+
 //connexion a mongoDB
 //https://cloud.mongodb.com/v2/623a3baa7599ae724eb3224b#clusters
 //mongodb+srv://NOMDUTILISATEUR:MOTDEPASSE@cluster0-pme76.mongodb.net/test?retryWrites=true&w=majority
@@ -102,11 +105,31 @@ app.use((req, res, next) => {
 app.use(express.json());
 
 // Middleware POST:
+//delete de l'id
+// on récupère le body
+/*
+Ici, vous créez une instance de votre modèle Thing en lui passant un objet JavaScript 
+contenant toutes les informations 
+requises du corps de requête analysé 
+(en ayant supprimé en amont le faux_id envoyé par le front-end).
+
+L'opérateur spread ... est utilisé pour faire une copie de tous les éléments de req.body . Pour plus d'informations sur l'opérateur spread, rendez-vous sur la documentation de MDN.
+
+Ce modèle comporte une méthode save() qui enregistre simplement votre Thing dans la base de données.
+
+La méthode save() renvoie une Promise. Ainsi, dans notre bloc then() , nous renverrons une réponse de réussite avec un code 201 de réussite. Dans notre bloc catch() , nous renverrons une réponse avec l'erreur générée par Mongoose ainsi qu'un code d'erreur 400.
+
+
+*/
 app.post("/api/stuff", (req, res, next) => {
-  console.log(req.body);
-  res.status(201).json({
-    message: "Objet créé !",
+  delete req.body._id;
+  const thing = new Thing({
+    ...req.body,
   });
+  thing
+    .save()
+    .then(() => res.status(201).json({ message: "Objet enregistré !" }))
+    .catch((error) => res.status(400).json({ error }));
 });
 
 app.use("/api/stuff", (req, res, next) => {
