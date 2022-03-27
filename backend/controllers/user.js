@@ -29,7 +29,7 @@ exports.signup = (req, res, next) => {
         .then(() => res.status(201).json({ message: "Utilisateur créee" }))
         .catch((error) => res.status(400).json({ error }));
     })
-    .catch((error) => res.status(500).json({ error })); //500 = error serveur
+    .catch((error) => res.status(501).json({ error })); //500 = error serveur
 };
 
 // ft login pour connecter les utilisateurs.
