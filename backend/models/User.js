@@ -23,6 +23,10 @@ const userSchema = mongoose.Schema({
 });
 
 //ajout plugin pour vérifier mail unique avec validateur.
+
+//Dans notre schéma, la valeur unique ,
+//avec l'élément mongoose-unique-validator passé comme plug-in,
+//s'assurera que deux utilisateurs ne puissent partager la même adresse e - mail.
 userSchema.plugin(uniqueValidator);
 //export du modele avec mongoose
 module.export = mongoose.model("User,userSchema");
