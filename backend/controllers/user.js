@@ -14,9 +14,13 @@ const bcrypt = require("bcrypt");
 const User = require("../models/User");
 
 // ft signup pour enregistrement de nouveaux utilisateurs
+
+//hash du mot de passe
+//10 tours pour créer un passwd sécurisé
+
 exports.signup = (req, res, next) => {
-  //hash du mot de passe
-  //10 tours pour créer un passwd sécurisé
+  console.log("email= " + req.body.email);
+  console.log("passwd= " + req.body.password);
   bcrypt
     .hash(req.body.password, 10)
     .then((hash) => {
@@ -26,10 +30,10 @@ exports.signup = (req, res, next) => {
       });
       user
         .save()
-        .then(() => res.status(201).json({ message: "Utilisateur créee" }))
+        .then(() => res.status(201).json({ message: "Utilisateur créé !" }))
         .catch((error) => res.status(400).json({ error }));
     })
-    .catch((error) => res.status(501).json({ error })); //500 = error serveur
+    .catch((error) => res.status(500).json({ error }));
 };
 
 // ft login pour connecter les utilisateurs.
