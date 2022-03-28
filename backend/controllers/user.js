@@ -18,8 +18,6 @@ const User = require("../models/User");
 //hash du mot de passe
 
 exports.signup = (req, res, next) => {
-  console.log("email= " + req.body.email);
-  console.log("passwd= " + req.body.password);
   bcrypt
     .hash(req.body.password, 10)
     .then((hash) => {
