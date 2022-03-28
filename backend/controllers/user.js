@@ -10,6 +10,9 @@ controleur pour les users
 
 //package de cryptage
 const bcrypt = require("bcrypt");
+
+//controle des token
+const jwt = require("jsonwebtoken");
 //modele users
 const User = require("../models/User");
 
@@ -47,7 +50,7 @@ exports.login = (req, res, next) => {
       }
 
       //bcrypt pour vérifier le mot de passe envoyé par l'utilisateur avec le hash enregistré
-      //Si correct renvoi du TOKEN au frontrnd
+      //Si correct renvoi du TOKEN au frontend
       bcrypt
         .compare(req.body.password, user.password)
         .then((valid) => {
@@ -56,7 +59,14 @@ exports.login = (req, res, next) => {
           }
           res.status(200).json({
             userId: user._id,
-            token: "TOKEN",
+            //token signé qui expire dans 24h avec chaine alleatoire
+            token: jwt.sign(
+              {
+                userId: user._id,
+              },
+              "RANDOM_TOKEN_SECRET",
+              { expiresIn: "24h" }
+            ),
           });
         })
         .catch((error) => res.status(500).json({ error })); //500 = error serveur
