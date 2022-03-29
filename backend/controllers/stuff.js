@@ -94,7 +94,8 @@ exports.deleteThing = (req, res, next) => {
 
 //Suppression d'un objet
 // avec vérification de l'ID de l'utilisateur avant de supprimer l'objet
-/*exports.deleteThing = (req, res, next) => {
+/*
+exports.deleteThing = (req, res, next) => {
   Thing.findOne({ _id: req.params.id }).then((thing) => {
     if (!thing) {
       res.status(404).json({
