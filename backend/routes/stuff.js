@@ -12,7 +12,7 @@ const router = express.Router();
 const stuffCtrl = require("../controllers/stuff");
 const auth = require("../middleware/auth");
 
-//auth dans chaque route permet de vérifier l'authentificatino et de la protéger
+//auth dans chaque route permet de vérifier l'authentification et de la protéger
 
 router.get("/", auth, stuffCtrl.getAllStuff);
 router.post("/", auth, stuffCtrl.createThing);
