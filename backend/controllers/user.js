@@ -35,9 +35,6 @@ exports.signup = (req, res, next) => {
     })
     .catch((error) => {
       res.status(500).json({ error });
-      console.log("email= " + req.body.email);
-      console.log("passwd= " + req.body.password);
-      alert("email= " + req.body.email);
     });
 };
 
@@ -60,6 +57,8 @@ exports.login = (req, res, next) => {
           res.status(200).json({
             userId: user._id,
             //token signé avec clé secrete et qui expire dans 24h avec chaine alleatoire
+            /*token: "TOKEN",*/
+
             token: jwt.sign(
               {
                 userId: user._id,

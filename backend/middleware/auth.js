@@ -19,7 +19,7 @@ module.exports = (req, res, next) => {
     const decodedToken = jwt.verify(token, "RANDOM_TOKEN_SECRET");
     const userId = decodedToken.userId;
 
-    // verif userId de la requete correspond à celui tu token
+    // verif userId de la requete correspond à celui du token
     if (req.boby.userId && req.body.userId !== userId) {
       //on retourne une erreur car user ID non reconnu
       throw "User ID non valable";
