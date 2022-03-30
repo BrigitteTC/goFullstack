@@ -6,6 +6,7 @@ auteur BTC
 */
 
 const Thing = require("../models/thing");
+const fs = require("fs"); //acces à la gestion des fichiers de Node
 
 //-----------------------------------------------------------------------------------
 
@@ -71,7 +72,7 @@ exports.modifyThing = (req, res, next) => {
 //--------------------------------------------------------------
 //Suppression d'un objet = DELETE
 // Première version sans vérifier l'ID de l'utilisateur
-///*
+/*
 exports.deleteThing = (req, res, next) => {
   Thing.deleteOne({ _id: req.params.id })
     .then(() => {
@@ -115,8 +116,39 @@ exports.deleteThing = (req, res, next) => {
       });
   });
 };
-
 */
+
+//Suppression d'un objet = DELETE
+// avec verif de l'utilisateur
+// et suppression de l'image dans le dossier.
+
+exports.deleteThing = (req, res, next) => {
+  Thing.findOne({ _id: req.params.id })
+    .then((thing) => {
+      //cas pas de thing -> erreur
+      if (!thing) {
+        res.status(404).json({
+          error: new Error("No such Thing!"),
+        });
+      }
+      //Utilisateur non autorisé -> erreur
+      if (thing.userId !== req.auth.userId) {
+        res.status(400).json({
+          error: new Error("Unauthorized request!"),
+        });
+      }
+
+      //cas normal : on vérifie si il y a une image à supprimer du dossier image
+      // et on la supprimer avec unlink
+      const filename = thing.imageUrl.split("/images/")[1];
+      fs.unlink(`images/${filename}`, () => {
+        Thing.deleteOne({ _id: req.params.id })
+          .then(() => res.status(200).json({ message: "Objet supprimé !" }))
+          .catch((error) => res.status(400).json({ error }));
+      });
+    })
+    .catch((error) => res.status(500).json({ error })); //erreur serveur
+};
 
 //--------------------------------------------------------------
 //Extraction de tous les objets. GET
