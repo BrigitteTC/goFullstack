@@ -4,31 +4,26 @@ creation: 26/03/2022
 auteur BTC
 -------------------------------------------
 */
-// in controllers/stuff.js
 
 const Thing = require("../models/thing");
 
+//-----------------------------------------------------------------------------------
+
 // Creation d'un objet
+
 exports.createThing = (req, res, next) => {
+  const thingObject = JSON.parse(req.body.thing);
+  delete thingObject._id; //on supprime l'ID du thing enregietré
   const thing = new Thing({
-    title: req.body.title,
-    description: req.body.description,
-    imageUrl: req.body.imageUrl,
-    price: req.body.price,
-    userId: req.body.userId,
+    ...thingObject,
+    imageUrl: `${req.protocol}://${req.get("host")}/images/${
+      req.file.filename
+    }`, // Url de l'image: protocole, nom du host: = server et Url de l'image
   });
   thing
     .save()
-    .then(() => {
-      res.status(201).json({
-        message: "Post saved successfully!",
-      });
-    })
-    .catch((error) => {
-      res.status(400).json({
-        error: error,
-      });
-    });
+    .then(() => res.status(201).json({ message: "Objet enregistré !" }))
+    .catch((error) => res.status(400).json({ error }));
 };
 
 //--------------------------------------------------------------
