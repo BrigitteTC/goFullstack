@@ -1,3 +1,5 @@
+//gofullstack
+
 /*-------------------------------------------------
 stuff.js
 Date de création: 26 mars 2022

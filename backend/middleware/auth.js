@@ -1,3 +1,5 @@
+//gofullstack
+
 /*----------------------------------------
 middleware/auth.js
 Date de création: 28/03/2022

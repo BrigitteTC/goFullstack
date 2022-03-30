@@ -1,3 +1,5 @@
+//goFullstack
+
 //-------------------------------------------------------
 //server.js
 //
@@ -28,8 +30,7 @@
 const http = require("http");
 const app = require("./app");
 
-
-//fonction normalizePort renvoie un port valide, qu'il soit fourni sous 
+//fonction normalizePort renvoie un port valide, qu'il soit fourni sous
 //la forme d'un numéro ou d'une chaîne;
 const normalizePort = (val) => {
   const port = parseInt(val, 10);
@@ -45,8 +46,7 @@ const normalizePort = (val) => {
 const port = normalizePort(process.env.PORT || "3000");
 app.set("port", port);
 
-
-//la fonction errorHandler  recherche les différentes erreurs 
+//la fonction errorHandler  recherche les différentes erreurs
 //et les gère de manière appropriée.Elle est ensuite enregistrée dans le serveur;
 
 const errorHandler = (error) => {
@@ -74,7 +74,7 @@ const server = http.createServer(app);
 
 server.on("error", errorHandler);
 
-//un écouteur d'évènements est également enregistré, 
+//un écouteur d'évènements est également enregistré,
 //consignant le port ou le canal nommé sur lequel le serveur s'exécute dans la console.
 
 server.on("listening", () => {
