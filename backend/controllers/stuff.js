@@ -9,11 +9,11 @@ const Thing = require("../models/thing");
 
 //-----------------------------------------------------------------------------------
 
-// Creation d'un objet
+// Creation d'un objet = POST
 
 exports.createThing = (req, res, next) => {
   const thingObject = JSON.parse(req.body.thing);
-  delete thingObject._id; //on supprime l'ID du thing enregietré
+  delete thingObject._id; //on supprime l'ID du thing enregistré
   const thing = new Thing({
     ...thingObject,
     imageUrl: `${req.protocol}://${req.get("host")}/images/${
@@ -28,7 +28,7 @@ exports.createThing = (req, res, next) => {
 
 //--------------------------------------------------------------
 
-//Récupération 1 objet
+//Récupération 1 objet = GET
 exports.getOneThing = (req, res, next) => {
   Thing.findOne({
     _id: req.params.id,
@@ -45,31 +45,31 @@ exports.getOneThing = (req, res, next) => {
 
 //--------------------------------------------------------------
 
-//Modification d'un objet
+//Modification d'un objet = PUT
+// 2 cas:
+//    1: L'utilisateur modifie les infos
+//    2: l'utilisateur modifie l'image = nouvelle image à traiter..
 exports.modifyThing = (req, res, next) => {
-  const thing = new Thing({
-    _id: req.params.id,
-    title: req.body.title,
-    description: req.body.description,
-    imageUrl: req.body.imageUrl,
-    price: req.body.price,
-    userId: req.body.userId,
-  });
-  Thing.updateOne({ _id: req.params.id }, thing)
-    .then(() => {
-      res.status(201).json({
-        message: "Thing updated successfully!",
-      });
-    })
-    .catch((error) => {
-      res.status(400).json({
-        error: error,
-      });
-    });
+  const thingObject = req.file //Test si nouvelle image ou pas
+    ? //1ier cas: nouvelle image on récupère son URL
+      {
+        ...JSON.parse(req.body.thing),
+        imageUrl: `${req.protocol}://${req.get("host")}/images/${
+          req.file.filename
+        }`,
+      }
+    : //2ieme cas: pas de nouvelle image: copie du body
+      { ...req.body };
+  Thing.updateOne(
+    { _id: req.params.id },
+    { ...thingObject, _id: req.params.id }
+  )
+    .then(() => res.status(200).json({ message: "Objet modifié !" }))
+    .catch((error) => res.status(400).json({ error }));
 };
 
 //--------------------------------------------------------------
-//Suppression d'un objet
+//Suppression d'un objet = DELETE
 // Première version sans vérifier l'ID de l'utilisateur
 ///*
 exports.deleteThing = (req, res, next) => {
@@ -119,7 +119,7 @@ exports.deleteThing = (req, res, next) => {
 */
 
 //--------------------------------------------------------------
-//Extraction de tous les objets.
+//Extraction de tous les objets. GET
 exports.getAllStuff = (req, res, next) => {
   Thing.find()
     .then((things) => {
